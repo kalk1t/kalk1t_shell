@@ -25,7 +25,8 @@ shell.h // Function declarations and includes
 ## 🛠️ Compilation
 
 
-gcc -o my_own_shell main.c shell.c parser.c
+gcc -o my_own_shell main.c shell.h shell.c parser.c
+
 ./my_own_shell
 
 
