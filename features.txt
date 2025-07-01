@@ -1,0 +1,4 @@
+#FEATURES
+#0 - exit & all builtin features
+#1 - '>' redirect
+

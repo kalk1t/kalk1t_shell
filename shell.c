@@ -1,4 +1,6 @@
 #include "shell.h"
+#include <fcntl.h>
+
 
 int execute(char **args){
 	if(args[0]==NULL){
@@ -25,9 +27,37 @@ pid_t pid;
 pid_t wpid;
 int status;
 
+int i;
+int out_redirect=0;
+char *outfile=NULL;
+
+//check for output redirection
+for (i=0; args[i]!=NULL;i++){
+	if(strcmp(args[i],">")==0){
+		out_redirect=1;
+		outfile=args[i+1];
+		args[i]=NULL; // remove '>' from args
+		break;
+	}
+}
+
+
 pid=fork();
 	if(pid==0){
 	//child process
+		
+		if(out_redirect){
+			int fd=open(outfile,O_WRONLY|O_CREAT|O_TRUNC, 0644);
+			if(fd<0){
+				perror("kalk1t_sjell");
+				exit(EXIT_FAILURE);
+			}
+			dup2(fd,STDOUT_FILENO); //redirect stdout to file
+			close(fd);
+
+		}
+
+
 		if(execvp(args[0],args)==-1){
 			perror("kalk1t_shell");
 		}

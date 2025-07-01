@@ -1,7 +1,6 @@
 #include "shell.h"
 
 
-#define PATH_MAX_LEN 1024
 
 int main(){
 
@@ -10,7 +9,7 @@ int main(){
 	char **args;
 	int status;
 
-	char cwd[PATH_MAX_LEN];
+	char cwd[MAX_PATH_LEN];
 
 	do{
 
