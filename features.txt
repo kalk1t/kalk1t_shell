@@ -2,3 +2,5 @@
 #0 - exit & all builtin features
 #1 - '>' output redirect
 #2 - '<' input redirect
+#3 - '>>' append redirection
+#4 - '|' pipelines
