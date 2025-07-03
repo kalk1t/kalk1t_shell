@@ -1,4 +1,4 @@
 #FEATURES
 #0 - exit & all builtin features
-#1 - '>' redirect
-
+#1 - '>' output redirect
+#2 - '<' input redirect

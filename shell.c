@@ -17,6 +17,7 @@ int execute(char **args){
 		else{
 			chdir(args[1]);
 		}
+		
 	return 1;
 	}
 	return launch(args);
@@ -28,6 +29,10 @@ pid_t wpid;
 int status;
 
 int i;
+
+int in_redirect=0;
+char *infile=NULL;
+
 int out_redirect=0;
 char *outfile=NULL;
 
@@ -37,6 +42,12 @@ for (i=0; args[i]!=NULL;i++){
 		out_redirect=1;
 		outfile=args[i+1];
 		args[i]=NULL; // remove '>' from args
+		break;
+	}
+	else if(strcmp(args[i],"<")==0){
+		in_redirect=1;
+		infile=args[i+1];
+		args[i]=NULL; // remove '<' from args
 		break;
 	}
 }
@@ -49,7 +60,7 @@ pid=fork();
 		if(out_redirect){
 			int fd=open(outfile,O_WRONLY|O_CREAT|O_TRUNC, 0644);
 			if(fd<0){
-				perror("kalk1t_sjell");
+				perror("kalk1t_shell");
 				exit(EXIT_FAILURE);
 			}
 			dup2(fd,STDOUT_FILENO); //redirect stdout to file
@@ -57,11 +68,21 @@ pid=fork();
 
 		}
 
+		if(in_redirect){
+			int fd=open(infile,O_RDONLY);
+			if(fd<0){
+				perror("kalk1t_shell");
+				exit(EXIT_FAILURE);
+			}
+			dup2(fd,STDIN_FILENO);
+			close(fd);
+		}
 
+		//error forking
 		if(execvp(args[0],args)==-1){
 			perror("kalk1t_shell");
 		}
-		exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE);
 	}
 	else if (pid<0){
 		//error forking
