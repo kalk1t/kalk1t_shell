@@ -20,8 +20,64 @@ int execute(char **args){
 		
 	return 1;
 	}
+	
+	//check for pipeline
+	for(int i=0;args[i]!=NULL;i++){
+		if(strcmp(args[i],"|")==0){
+			args[i]=NULL;
+			int result=execute_pipeline(args,&args[i+1]);
+			return result;
+		}
+
+	}
+
+
 	return launch(args);
 }
+
+int execute_pipeline(char **left_cmd,char **right_cmd){
+	int pipefd[2];
+	pid_t p1,p2;
+
+	if(pipe(pipefd)<0){
+		perror("kalk1t_shell");
+		return 1;
+	}
+
+	p1=fork();
+	if(p1==0){
+		//first child
+		dup2(pipefd[1],STDOUT_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
+
+		if(execvp(left_cmd[0],left_cmd)==-1){
+			perror("kalk1t_shell");
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	if(p2==0){
+		//secpnd child: right command
+		dup2(pipefd[0],STDIN_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
+		
+		if(execvp(right_cmd[0],right_cmd)==-1){
+			perror("kalk1t_shell");
+			exit(EXIT_FAILURE);
+
+		}
+	}
+//parent closes pipe ends and waits
+		close(pipefd[0]);
+		close(pipefd[1]);
+		waitpid(p1,NULL,0);
+		waitpid(p2,NULL,0);
+
+		return 1;
+}
+
 
 int launch(char **args){
 pid_t pid;
