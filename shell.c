@@ -36,12 +36,20 @@ char *infile=NULL;
 int out_redirect=0;
 char *outfile=NULL;
 
+int append_redirect=0;
+
 //check for output redirection
 for (i=0; args[i]!=NULL;i++){
 	if(strcmp(args[i],">")==0){
 		out_redirect=1;
 		outfile=args[i+1];
 		args[i]=NULL; // remove '>' from args
+		break;
+	}
+	else if(strcmp(args[i],">>")==0){
+		append_redirect=1;
+		outfile=args[i+1];
+		args[i]=NULL;
 		break;
 	}
 	else if(strcmp(args[i],"<")==0){
@@ -67,7 +75,15 @@ pid=fork();
 			close(fd);
 
 		}
-
+		if(append_redirect){
+			int fd=open(outfile,O_WRONLY|O_CREAT|O_APPEND,0644);
+			if(fd<0){
+				perror("kalk1t_shell");
+				exit(EXIT_FAILURE);
+			}
+			dup2(fd,STDOUT_FILENO);
+			close(fd);
+		}
 		if(in_redirect){
 			int fd=open(infile,O_RDONLY);
 			if(fd<0){
