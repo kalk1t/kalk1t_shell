@@ -10,6 +10,7 @@ int execute(char **args){
 	if(strcmp(args[0],"exit")==0){
 		return 0;
 	}
+
 	if(strcmp(args[0],"cd")==0){
 		if(args[1]==NULL){
 			fprintf(stderr,"kalk1t_shell: expected arguments to \"cd\"\n");
@@ -28,11 +29,23 @@ int execute(char **args){
 			int result=execute_pipeline(args,&args[i+1]);
 			return result;
 		}
-
 	}
 
+	//check for background
+	int background=0;
+	for(int i=0;args[i]!=NULL;i++){
+		if(strcmp(args[i],"&")==0){
+			background=1;
+			args[i]=NULL; //remove & from args;
+			break;		
+		}
+	}
+			
+	
+	
 
-	return launch(args);
+
+	return launch(args,background);
 }
 
 int execute_pipeline(char **left_cmd,char **right_cmd){
@@ -79,7 +92,7 @@ int execute_pipeline(char **left_cmd,char **right_cmd){
 }
 
 
-int launch(char **args){
+int launch(char **args,int background){
 pid_t pid;
 pid_t wpid;
 int status;
@@ -162,9 +175,13 @@ pid=fork();
 	}
 	else{
 		//parent process
-		do {
-			wpid=waitpid(pid,&status,WUNTRACED);
-		}while(!WIFEXITED(status) && !WIFSIGNALED(status));
+		if(!background){
+			do {
+				wpid=waitpid(pid,&status,WUNTRACED);	
+			}while(!WIFEXITED(status) && !WIFSIGNALED(status));
+		}else{
+			printf("Process running in background with PID %d\n",pid);
+		}
 	}
 	return 1;
 }

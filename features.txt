@@ -4,3 +4,4 @@
 #2 - '<' input redirect
 #3 - '>>' append redirection
 #4 - '|' pipelines
+#5 - '&' Background processes
