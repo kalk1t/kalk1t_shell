@@ -1,5 +1,44 @@
 #include "shell.h"
 #include <fcntl.h>
+
+builtin_command builtins[]={
+	{"cd",shell_cd},
+	{"exit",shell_exit}
+
+};
+
+int num_builtins(){
+	return sizeof(builtins)/sizeof(builtin_command);
+}
+
+
+int shell_cd(char **args){
+	if(args[1]==NULL){
+		fprintf(stderr,"kalk1t_shell: expected argument to \"cd\"\n");
+	}else{
+		if (chdir(args[1])!=0){
+			perror("kalk1t_shell");
+		}
+	}
+	return 1;
+	
+}
+
+int shell_exit(char **args){
+	return 0;
+}
+
+int shell_pwd(char **args){
+	char cwd[1024];
+	if(getcwd(cwd,sizeof(cwd))!=NULL){
+		printf("%s\n",cwd);
+	}else{
+		perror("kalk1t_shell");
+	}
+	return 1;
+
+}
+
 int execute(char **args){
 	if(args[0]==NULL){
 		return 1;
@@ -20,6 +59,14 @@ int execute(char **args){
 	return 1;
 	}
 	
+
+	for(int i=0;i<num_builtins();i++){
+		if(strcmp(args[0],builtins[i].name)==0){
+			return builtins[i].func(args);
+		}
+	}
+
+		
 	//check for pipeline
 	for(int i=0;args[i]!=NULL;i++){
 		if(strcmp(args[i],"|")==0){

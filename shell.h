@@ -10,6 +10,11 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+typedef int (*builtin_func)(char **args);
+typedef struct {
+	char *name;
+	builtin_func func;
+}builtin_command;
 
 //function dec
 char *read_line(void);
@@ -18,4 +23,8 @@ int execute(char **args);
 int execute_pipeline(char **left_cmd,char **right_cmd);
 int launch(char **args,int background);
 void sigint_handler(int sig);
+int shell_cd(char **args);
+int shell_exit(char **args);
+
+
 #endif

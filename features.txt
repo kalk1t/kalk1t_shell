@@ -5,3 +5,9 @@
 #3 - '>>' append redirection
 #4 - '|' pipelines
 #5 - '&' Background processes
+#6 - readline/history/up and down arrows
+
+
+
+
+
