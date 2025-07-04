@@ -14,9 +14,8 @@ int main(){
 	
 	signal(SIGINT,sigint_handler);
 
-
 	do{
-
+		
 		if(getcwd(cwd,sizeof(cwd))!=NULL){
 			printf("%s> ",cwd);
 		}else{

@@ -92,9 +92,7 @@ int execute_pipeline(char **left_cmd,char **right_cmd){
 }
 
 void sigint_handler(int sig){
-	char cwd[MAX_PATH_LEN];
-	getcwd(cwd,sizeof(cwd));
-	printf("%s\n",cwd);
+	printf("\n");
 }
 
 
