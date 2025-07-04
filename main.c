@@ -1,5 +1,5 @@
 #include "shell.h"
-
+#include <signal.h>
 
 
 int main(){
@@ -10,6 +10,10 @@ int main(){
 	int status;
 
 	char cwd[MAX_PATH_LEN];
+	//signal(SIGINT,SIG_IGN); ignores cntrl+C
+	
+	signal(SIGINT,sigint_handler);
+
 
 	do{
 

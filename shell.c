@@ -91,6 +91,12 @@ int execute_pipeline(char **left_cmd,char **right_cmd){
 		return 1;
 }
 
+void sigint_handler(int sig){
+	char cwd[MAX_PATH_LEN];
+	getcwd(cwd,sizeof(cwd));
+	printf("%s\n",cwd);
+}
+
 
 int launch(char **args,int background){
 pid_t pid;

@@ -14,5 +14,5 @@ char **parse_line(char *line);
 int execute(char **args);
 int execute_pipeline(char **left_cmd,char **right_cmd);
 int launch(char **args,int background);
-
+void sigint_handler(int sig);
 #endif
