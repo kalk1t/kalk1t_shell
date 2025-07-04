@@ -1,10 +1,20 @@
 #include "shell.h"
 
 char *read_line(void){
+	
+	char *cwd=getcwd(NULL,0);
+	size_t prompt_len=strlen(cwd)+4;
+	char *prompt=malloc(prompt_len);
+	snprintf(prompt,prompt_len,"%s >",cwd);
+	free(cwd);
 
-	char *line=NULL;
-	size_t bufsize=0;
-	getline(&line,&bufsize,stdin);
+	char *line=readline(prompt); // display current directory as prompt
+	free(prompt);
+
+	if(line && *line){
+		add_history(line);
+	}
+	
 	return line;
 }
 

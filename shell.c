@@ -1,7 +1,5 @@
 #include "shell.h"
 #include <fcntl.h>
-
-
 int execute(char **args){
 	if(args[0]==NULL){
 		return 1;

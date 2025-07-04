@@ -5,7 +5,7 @@
 int main(){
 
 	
-	char *lines;
+	char *line;
 	char **args;
 	int status;
 
@@ -14,21 +14,13 @@ int main(){
 	
 	signal(SIGINT,sigint_handler);
 
-	do{
-		
-		if(getcwd(cwd,sizeof(cwd))!=NULL){
-			printf("%s> ",cwd);
-		}else{
-			perror("getcwd error");
-			printf("> ");
-		}
-
-
-	lines=read_line();
-	args=parse_line(lines);
+	do{				
+	
+	line=read_line();
+	args=parse_line(line);
 	status=execute(args);
 
-	free(lines);
+	free(line);
 	free(args);
 
 	}while(status);
